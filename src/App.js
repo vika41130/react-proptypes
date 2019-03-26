@@ -1,58 +1,65 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 import './App.css';
 
-const Temp = (props) => {
-  console.log("render temp");
+
+const Test = (props) => {
   return (
-    <div>{props.test}</div>
+    <div>
+      <h1>{props.str}</h1>
+      <h1>{props.bool ? 'bool' : 'no bool'}</h1>
+      <h1>{props.strOrNum}</h1>
+      <div>
+        {
+          props.arr.map((e, index) => {
+            return (
+              <li key={index}> {e} </li>
+            );
+          })
+        }
+      </div>
+      <div>
+        {
+          props.objArr.map((e, index) => {
+            return (
+              <li key={index}> {e.name} - {e.age} </li>
+            );
+          })
+        }
+      </div>
+      <h1>{props.children}</h1>
+    </div>
   );
+}
+
+Test.propTypes = {
+  str: PropTypes.string,
+  bool: PropTypes.bool,
+  strOrNum: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  arr: PropTypes.arrayOf(PropTypes.number),
+  objArr: PropTypes.arrayOf(PropTypes.shape(
+    {
+      name: PropTypes.string,
+      age: PropTypes.number,
+    }
+  )),
+  // children: PropTypes.string,
+  children: PropTypes.element.isRequired,
 }
 
 class App extends PureComponent {
 
-  state = {
-    val: 1
-  }
-
-  onClick = () => {
-    alert(`yey : ${this.firstName.value} | ${this.lastName.value} submitted !`);
-  }
-
-  onKeyUp = (target, e) => {
-    console.log(e.keyCode);
-    if (e.keyCode === 13) {
-      switch (target) {
-        case 'firstName': this.lastName.focus(); break;
-        case 'lastName': this.age.focus(); break;
-        case 'age': this.submit.focus(); break;
-        default: this.firstName.focus();
-      }
-    }
-  }
-
   render() {
     return (
       <div className="App">
-        <div>
-          <span>First Name: </span>
-          <input ref={(input) => { this.firstName = input }} type="text"
-            onKeyUp={this.onKeyUp.bind(this, 'firstName')} />
-        </div>
-        <div>
-          <span>Last Name: </span>
-          <input ref={(input) => { this.lastName = input }} type="text"
-            onKeyUp={this.onKeyUp.bind(this, 'lastName')} />
-        </div>
-        <div>
-          <span>Age: </span>
-          <input ref={(input) => { this.age = input }} type="text"
-            onKeyUp={this.onKeyUp.bind(this, 'age')} />
-        </div>
-        <div>
-          <input type="submit" value="Submit" onClick={this.onClick} ref={(input) => { this.submit = input }}
-            onKeyUp={this.onKeyUp.bind(this, 'submit')} />
-        </div>
+        <Test str={'Techsith'}
+          bool={false}
+          strOrNum={10}
+          arr={[1, 2, 3]}
+          objArr={[{ name: 'John', age: 10 }, { name: 'Pith', age: 20 }]}>
+          <span>Element</span>
+        </Test>
       </div>
     );
   }
